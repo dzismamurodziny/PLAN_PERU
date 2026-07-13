@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Peru 2026 — plan wyprawy</title>
+<style>
+  :root {
+    --surface: #fcfcfb;
+    --page: #f9f9f7;
+    --ink: #0b0b0b;
+    --ink-2: #52514e;
+    --muted: #898781;
+    --grid: #e1e0d9;
+    --baseline: #c3c2b7;
+    --border: rgba(11,11,11,0.10);
+    --card-shadow: 0 1px 3px rgba(11,11,11,0.06);
+    --card-shadow-hover: 0 4px 14px rgba(11,11,11,0.10);
+    --chip-bg: rgba(11,11,11,0.05);
+    --warn-bg: rgba(250,178,25,0.12);
+    --warn-edge: #b97c00;
+    --status-serious: #ec835a;
+  }
+  html[data-theme="dark"] {
+    --surface: #1a1a19;
+    --page: #0d0d0d;
+    --ink: #ffffff;
+    --ink-2: #c3c2b7;
+    --muted: #898781;
+    --grid: #2c2c2a;
+    --baseline: #383835;
+    --border: rgba(255,255,255,0.10);
+    --card-shadow: none;
+    --card-shadow-hover: none;
+    --chip-bg: rgba(255,255,255,0.07);
+    --warn-bg: rgba(250,178,25,0.10);
+    --warn-edge: #fab219;
+  }
+  @media (prefers-color-scheme: dark) {
+    html:not([data-theme="light"]) {
+      --surface: #1a1a19;
+      --page: #0d0d0d;
+      --ink: #ffffff;
+      --ink-2: #c3c2b7;
+      --muted: #898781;
+      --grid: #2c2c2a;
+      --baseline: #383835;
+      --border: rgba(255,255,255,0.10);
+      --card-shadow: none;
+      --card-shadow-hover: none;
+      --chip-bg: rgba(255,255,255,0.07);
+      --warn-bg: rgba(250,178,25,0.10);
+      --warn-edge: #fab219;
+    }
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--page);
+    color: var(--ink);
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-size: 15px;
+    line-height: 1.45;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 560px; margin: 0 auto; padding: 16px 14px 60px; }
+  svg.ic { width: 18px; height: 18px; stroke: currentColor; fill: none;
+           stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round;
+           vertical-align: -3px; flex: 0 0 auto; }
+
+  /* ---------- nagłówek ---------- */
+  header { padding: 8px 2px 14px; position: relative; animation: rise .6s ease both; }
+  @keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+  .theme-btn {
+    position: absolute; top: 6px; right: 0;
+    background: var(--chip-bg); border: 1px solid var(--border);
+    border-radius: 50%; width: 36px; height: 36px;
+    font-size: 15px; cursor: pointer; color: var(--ink);
+  }
+  .demo-badge {
+    display: inline-block; font-size: 11px; font-weight: 700;
+    letter-spacing: .06em; text-transform: uppercase;
+    color: var(--status-serious); border: 1px solid var(--status-serious);
+    border-radius: 99px; padding: 2px 10px; margin-bottom: 8px;
+  }
+  h1 { font-size: 27px; letter-spacing: -0.02em; }
+  .subtitle { color: var(--ink-2); font-size: 14px; margin-top: 2px; }
+  .meta-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+  .chip {
+    background: var(--chip-bg); border: 1px solid var(--border);
+    border-radius: 99px; padding: 3px 10px; font-size: 12.5px; color: var(--ink-2);
+  }
+  .chip strong { color: var(--ink); font-weight: 600; }
+  .updated { margin-top: 10px; font-size: 12px; color: var(--muted); }
+
+  /* ---------- kafelki „Stories" (dzień po dniu) ---------- */
+  .panel {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 14px; padding: 14px; margin: 10px 0 18px;
+    box-shadow: var(--card-shadow);
+    animation: rise .6s ease .12s both;
+  }
+  .panel h2 { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
+  .panel .sub { font-size: 12px; color: var(--muted); margin-bottom: 10px; }
+
+  .stories-wrap { position: relative; margin: 0 -2px; }
+  .stories {
+    display: flex; gap: 10px; overflow-x: auto;
+    padding: 4px 2px 6px;
+    scroll-snap-type: x proximity;
+    scrollbar-width: none; -webkit-overflow-scrolling: touch;
+  }
+  .stories::-webkit-scrollbar { display: none; }
+  @media (hover: hover) { .stories { cursor: grab; } }
+  .stories.dragging { cursor: grabbing; scroll-snap-type: none; user-select: none; }
+  .stories.dragging .story { cursor: grabbing; }
+  .story {
+    flex: 0 0 auto; width: 108px; scroll-snap-align: start;
+    background: none; border: 0; padding: 0; margin: 0;
+    cursor: pointer; color: inherit; font: inherit;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .story .thumb {
+    position: relative; height: 156px; border-radius: 15px; overflow: hidden;
+    display: flex; align-items: flex-end;
+    background-color: var(--chip-bg); background-size: cover; background-position: center;
+    box-shadow: var(--card-shadow);
+    transition: transform .18s ease, box-shadow .18s ease;
+  }
+  @media (hover: hover) {
+    .story:hover .thumb { transform: translateY(-3px); box-shadow: var(--card-shadow-hover); }
+  }
+  .story:focus-visible { outline: none; }
+  .story:focus-visible .thumb { box-shadow: 0 0 0 3px var(--ink); }
+
+  /* kółko-awatar z ringiem regionu (jak profilowe w relacjach) */
+  .story .avatar {
+    position: absolute; top: 9px; left: 9px; z-index: 2;
+    width: 34px; height: 34px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--ring);
+    box-shadow: 0 0 0 2px #fff, 0 0 0 3.5px var(--ring), 0 1px 4px rgba(0,0,0,.35);
+  }
+  .story .avatar svg { width: 19px; height: 19px; stroke: #fff; fill: none;
+    stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .story .scrim {
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,.72) 0%, rgba(0,0,0,.15) 42%, rgba(0,0,0,0) 66%);
+  }
+  .story .name { position: relative; z-index: 1; margin: 0 9px 9px; color: #fff; }
+  .story .name .dn { font-size: 11px; font-weight: 600; opacity: .95;
+    text-shadow: 0 1px 3px rgba(0,0,0,.6); }
+  .story .name .tt {
+    font-size: 13px; font-weight: 700; line-height: 1.2; margin-top: 1px;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+    text-shadow: 0 1px 3px rgba(0,0,0,.65);
+  }
+
+  .story.ghost { cursor: default; }
+  .story.ghost .thumb {
+    background: var(--chip-bg); border: 1px dashed var(--baseline);
+    align-items: center; justify-content: center;
+  }
+  .story.ghost .avatar { position: static; background: transparent;
+    box-shadow: 0 0 0 2px var(--baseline); }
+  .story.ghost .avatar svg { stroke: var(--muted); opacity: .7; }
+  .story.ghost .scrim { display: none; }
+  .story.ghost .name { position: absolute; left: 0; right: 0; bottom: 8px; text-align: center; margin: 0; color: var(--muted); }
+  .story.ghost .name .tt { text-shadow: none; }
+
+  /* strzałki nawigacji (jak w relacjach) */
+  .stories-arrow {
+    position: absolute; top: 74px; z-index: 3;
+    width: 32px; height: 32px; border-radius: 50%;
+    background: var(--surface); border: 1px solid var(--border);
+    color: var(--ink); cursor: pointer; display: none;
+    align-items: center; justify-content: center;
+    box-shadow: 0 2px 8px rgba(11,11,11,.22);
+  }
+  .stories-arrow.prev { left: -6px; }
+  .stories-arrow.next { right: -6px; }
+  .stories-arrow svg { width: 16px; height: 16px; }
+  .stories-arrow:hover { background: var(--chip-bg); }
+  @media (hover: hover) { .stories-arrow.on { display: flex; } }
+
+  /* ---------- nawigacja regionów ---------- */
+  nav {
+    position: sticky; top: 0; z-index: 10;
+    background: var(--page);
+    margin: 0 -14px; padding: 8px 14px;
+    display: flex; gap: 6px; overflow-x: auto;
+    border-bottom: 1px solid var(--grid);
+    scrollbar-width: none;
+  }
+  nav::-webkit-scrollbar { display: none; }
+  .region-chip {
+    flex: 0 0 auto; display: inline-flex; align-items: center; gap: 6px;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 99px; padding: 5px 12px; font-size: 13px;
+    color: var(--ink); cursor: pointer; text-decoration: none;
+  }
+  .region-dot { width: 9px; height: 9px; border-radius: 50%; }
+
+  /* ---------- oś czasu (dni) ---------- */
+  .timeline { position: relative; padding: 18px 0 0 26px; }
+  .timeline::before {
+    content: ""; position: absolute; left: 8px; top: 0; bottom: 0;
+    width: 2px; background: var(--grid); border-radius: 2px;
+  }
+  .day {
+    position: relative; margin-bottom: 14px;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 14px; overflow: hidden;
+    box-shadow: var(--card-shadow);
+    border-left: 4px solid var(--rc);
+    scroll-margin-top: 56px;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    opacity: 0; transform: translateY(20px);
+    transition: opacity .55s ease, transform .55s ease, box-shadow .25s ease;
+  }
+  .day.in { opacity: 1; transform: none; }
+  @media (hover: hover) { .day:hover { box-shadow: var(--card-shadow-hover); } }
+  .day::before {
+    content: ""; position: absolute; left: -22.5px; top: 20px;
+    width: 11px; height: 11px; border-radius: 50%;
+    background: var(--rc); border: 2px solid var(--page);
+    transform: scale(0);
+    transition: transform .4s cubic-bezier(.34,1.56,.64,1) .25s;
+  }
+  .day.in::before { transform: scale(1); }
+  .day-head { padding: 12px 14px 0; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .day-num { font-size: 17px; font-weight: 700; }
+  .day-date { font-size: 13px; color: var(--ink-2); }
+  .badges { margin-left: auto; display: flex; gap: 6px; align-items: center; }
+  .badge {
+    font-size: 10.5px; font-weight: 700; letter-spacing: .04em;
+    border-radius: 6px; padding: 2.5px 8px; white-space: nowrap;
+  }
+  .badge.region { color: #fff; background: var(--rc); }
+  .badge.locked { background: var(--chip-bg); color: var(--ink-2); border: 1px solid var(--border); }
+  .chev { color: var(--muted); transition: transform .35s ease; display: flex; }
+  .chev svg { width: 14px; height: 14px; }
+  .day.open .chev { transform: rotate(180deg); }
+  .day-title { padding: 4px 14px 4px; font-size: 15.5px; font-weight: 600; }
+
+  /* zwinięty podgląd: same ikony */
+  .preview { display: flex; align-items: center; gap: 10px; padding: 4px 14px 12px; color: var(--muted); }
+  .day.open .preview { display: none; }
+
+  /* rozwijane szczegóły */
+  .collapse { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .45s ease; }
+  .day.open .collapse { grid-template-rows: 1fr; }
+  .collapse > .inner { overflow: hidden; min-height: 0; }
+
+  /* --- proporcjonalny rozkład godzinowy --- */
+  .sched { position: relative; margin: 6px 14px 4px; }
+  .sched .tick { position: absolute; left: 0; width: 100%; }
+  .sched .tick .tline { position: absolute; left: 46px; right: 0; top: 0; border-top: 1px solid var(--grid); }
+  .sched .tick .tlabel {
+    position: absolute; left: 0; top: -7px; width: 40px; text-align: right;
+    font-size: 10.5px; color: var(--muted); font-variant-numeric: tabular-nums;
+  }
+  .sched .rail { position: absolute; left: 52px; top: 0; bottom: 0; width: 2px; background: var(--grid); border-radius: 2px; }
+  .sched .bar { position: absolute; left: 50.5px; width: 5px; border-radius: 3px; background: var(--rc); opacity: .8; }
+  .sched .dot {
+    position: absolute; left: 48px; width: 10px; height: 10px; border-radius: 50%;
+    background: var(--rc); border: 2px solid var(--surface); z-index: 2;
+  }
+  .sched .ev { position: absolute; left: 68px; right: 0; }
+  .ev .line1 { display: flex; align-items: baseline; gap: 7px; flex-wrap: wrap; }
+  .ev .evi { color: var(--muted); position: relative; top: 2px; }
+  .ev .time { font-weight: 700; font-size: 13px; font-variant-numeric: tabular-nums; }
+  .ev .time .ok { font-weight: 400; color: var(--muted); }
+  .ev .txt { font-size: 14px; }
+  .ev .dur { font-size: 11.5px; color: var(--muted); white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .ev.warn-ev { background: var(--warn-bg); border-left: 3px solid var(--warn-edge); border-radius: 6px; padding: 6px 8px; }
+  .ev.warn-ev .evi { color: var(--warn-edge); }
+
+  /* pozycje bez godziny */
+  .rest-list { margin: 10px 14px 6px; border-top: 1px solid var(--grid); padding-top: 8px; }
+  .rest-item { display: flex; gap: 9px; padding: 5px 0; align-items: baseline; }
+  .rest-item .evi { color: var(--muted); position: relative; top: 3px; }
+  .rest-item .txt { font-size: 14px; }
+
+  .night {
+    display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+    padding: 9px 14px; margin-top: 8px;
+    background: var(--chip-bg); font-size: 13px; color: var(--ink-2);
+  }
+  .night .evi { color: var(--muted); display: flex; }
+  .night b { color: var(--ink); font-weight: 600; }
+  .alt-chip {
+    margin-left: auto; font-size: 12px; font-weight: 600;
+    border-radius: 6px; padding: 2px 8px; white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+  .alt-ok { background: var(--chip-bg); color: var(--ink-2); }
+  .alt-mid { background: rgba(250,178,25,0.18); color: var(--ink); }
+  .alt-high { background: rgba(236,131,90,0.20); color: var(--ink); }
+  .alt-extreme { background: rgba(208,59,59,0.20); color: var(--ink); }
+
+  .ghost {
+    border: 1px dashed var(--baseline); border-radius: 14px;
+    padding: 16px; color: var(--muted); font-size: 13.5px;
+    text-align: center;
+    opacity: 0; transform: translateY(20px);
+    transition: opacity .55s ease, transform .55s ease;
+  }
+  .ghost.in { opacity: 1; transform: none; }
+  footer { margin-top: 26px; text-align: center; font-size: 12px; color: var(--muted); }
+
+  /* ---------- zakładki PLAN / EKWIPUNEK ---------- */
+  .tabs {
+    display: flex; gap: 6px; margin: 6px 0 4px;
+    background: var(--chip-bg); border: 1px solid var(--border);
+    border-radius: 12px; padding: 4px;
+  }
+  .tab {
+    flex: 1 1 0; display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+    background: none; border: 0; border-radius: 9px; padding: 9px 10px;
+    font: inherit; font-size: 14px; font-weight: 600; color: var(--ink-2);
+    cursor: pointer; -webkit-tap-highlight-color: transparent;
+    transition: background .2s ease, color .2s ease;
+  }
+  .tab svg { width: 17px; height: 17px; }
+  .tab.active { background: var(--surface); color: var(--ink); box-shadow: var(--card-shadow); }
+  @media (hover: hover) { .tab:not(.active):hover { color: var(--ink); } }
+  .tab .cnt {
+    font-size: 11px; font-weight: 700; color: var(--muted);
+    background: var(--page); border: 1px solid var(--border);
+    border-radius: 99px; padding: 0 6px; min-width: 18px; text-align: center;
+    font-variant-numeric: tabular-nums;
+  }
+  .view { animation: rise .45s ease both; }
+  .view[hidden] { display: none; }
+
+  /* ---------- widok ekwipunku ---------- */
+  .gear-intro {
+    background: var(--surface); border: 1px solid var(--border);
+    border-left: 4px solid var(--warn-edge);
+    border-radius: 12px; padding: 12px 14px; margin: 10px 0 14px;
+    font-size: 13.5px; color: var(--ink-2);
+  }
+  .gear-tools { display: flex; align-items: center; gap: 10px; margin: 0 2px 14px; flex-wrap: wrap; }
+  .gear-progress { flex: 1 1 160px; }
+  .gear-progress .lbl { font-size: 12px; color: var(--muted); margin-bottom: 5px; }
+  .gear-progress .lbl b { color: var(--ink); font-weight: 700; }
+  .bar-track { height: 8px; border-radius: 99px; background: var(--chip-bg); overflow: hidden; }
+  .bar-fill {
+    height: 100%; border-radius: 99px; width: 0;
+    background: linear-gradient(90deg, #1baf7a, #199e70);
+    transition: width .5s cubic-bezier(.34,1.2,.64,1);
+  }
+  .gear-reset {
+    background: var(--chip-bg); border: 1px solid var(--border);
+    border-radius: 9px; padding: 7px 12px; font: inherit; font-size: 12.5px;
+    color: var(--ink-2); cursor: pointer;
+  }
+  @media (hover: hover) { .gear-reset:hover { color: var(--ink); } }
+
+  .gcat {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 14px; margin-bottom: 12px; overflow: hidden;
+    box-shadow: var(--card-shadow);
+  }
+  .gcat-head {
+    display: flex; align-items: center; gap: 10px;
+    padding: 12px 14px; cursor: pointer; -webkit-tap-highlight-color: transparent;
+  }
+  .gcat-head .gci {
+    width: 34px; height: 34px; flex: 0 0 auto; border-radius: 9px;
+    background: var(--chip-bg); display: flex; align-items: center; justify-content: center;
+    color: var(--ink);
+  }
+  .gcat-head .gci svg { width: 19px; height: 19px; }
+  .gcat-head h3 { font-size: 15px; font-weight: 600; flex: 1 1 auto; }
+  .gcat-head .gcount {
+    font-size: 12px; font-weight: 700; color: var(--muted);
+    font-variant-numeric: tabular-nums; white-space: nowrap;
+  }
+  .gcat-head .gcount.done { color: #1baf7a; }
+  .gcat-head .chev { margin-left: 2px; }
+  .gcat.open .chev { transform: rotate(180deg); }
+  .gcat-note {
+    font-size: 12.5px; color: var(--warn-edge); background: var(--warn-bg);
+    padding: 8px 14px; border-top: 1px solid var(--border);
+  }
+  .gcat-body { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .4s ease; }
+  .gcat.open .gcat-body { grid-template-rows: 1fr; }
+  .gcat-body > .gci-inner { overflow: hidden; min-height: 0; }
+  .glist { list-style: none; padding: 4px 0 8px; }
+
+  .gitem { display: flex; gap: 11px; padding: 9px 14px; align-items: flex-start; cursor: pointer; }
+  .gitem + .gitem { border-top: 1px solid var(--grid); }
+  @media (hover: hover) { .gitem:hover { background: var(--chip-bg); } }
+  .gitem input {
+    appearance: none; -webkit-appearance: none; flex: 0 0 auto;
+    width: 21px; height: 21px; margin-top: 1px; border-radius: 6px;
+    border: 2px solid var(--baseline); background: var(--page); cursor: pointer;
+    position: relative; transition: background .15s ease, border-color .15s ease;
+  }
+  .gitem input:checked { background: #1baf7a; border-color: #1baf7a; }
+  .gitem input:checked::after {
+    content: ""; position: absolute; left: 6px; top: 2px;
+    width: 5px; height: 10px; border: solid #fff; border-width: 0 2.5px 2.5px 0;
+    transform: rotate(45deg);
+  }
+  .gitem input:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+  .gitem .gtxt { flex: 1 1 auto; font-size: 14px; line-height: 1.35; }
+  .gitem .gtxt .qty { color: var(--muted); font-weight: 600; font-size: 12.5px; margin-left: 6px; }
+  .gitem .gtxt-note, .gitem .gnote { display: block; font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .gitem .gnote a { color: var(--ink-2); }
+  .gitem .sug-tag {
+    display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: .03em;
+    color: #199e70; border: 1px solid #1baf7a; border-radius: 99px;
+    padding: 0 6px; margin-left: 6px; vertical-align: 1px;
+  }
+  .gitem.checked .gtxt { color: var(--muted); text-decoration: line-through; text-decoration-color: var(--baseline); }
+  .gitem.checked .gtxt .qty, .gitem.checked .sug-tag { opacity: .5; }
+  .gear-q {
+    background: var(--warn-bg); border: 1px solid var(--warn-edge);
+    border-radius: 12px; padding: 12px 14px; margin: 4px 0 8px;
+    font-size: 13.5px; color: var(--ink);
+  }
+  .gear-q b { display: block; margin-bottom: 3px; color: var(--warn-edge); }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    header, .panel, .view { animation: none; }
+    .day, .ghost { opacity: 1; transform: none; transition: none; }
+    .day::before { transform: scale(1); transition: none; }
+    .collapse, .gcat-body, .bar-fill { transition: none; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <button class="theme-btn" id="themeBtn" title="Tryb jasny/ciemny">◐</button>
+    <div id="demoBadge"></div>
+    <h1 id="t-title"></h1>
+    <div class="subtitle" id="t-sub"></div>
+    <div class="meta-row" id="t-meta"></div>
+    <div class="meta-row" id="t-travelers"></div>
+    <div class="updated" id="t-updated"></div>
+  </header>
+
+  <div class="tabs" id="tabs">
+    <button class="tab active" data-view="plan" type="button"></button>
+    <button class="tab" data-view="ekwipunek" type="button"></button>
+  </div>
+
+  <section class="view" id="view-plan">
+  <div class="panel">
+    <h2>Cała podróż — dzień po dniu</h2>
+    <div class="sub">przesuń w bok i kliknij dzień, żeby przeskoczyć do planu · szare kafelki to dni jeszcze do ułożenia</div>
+    <div class="stories-wrap">
+      <button class="stories-arrow prev" id="storiesPrev" type="button" aria-label="Przewiń w lewo"></button>
+      <div class="stories" id="stories"></div>
+      <button class="stories-arrow next" id="storiesNext" type="button" aria-label="Przewiń w prawo"></button>
+    </div>
+  </div>
+
+  <nav id="regionNav"></nav>
+
+  <div class="timeline" id="timeline"></div>
+
+  <footer id="foot"></footer>
+  </section>
+
+  <section class="view" id="view-ekwipunek" hidden>
+    <div class="gear-intro" id="gearIntro"></div>
+    <div class="gear-tools">
+      <div class="gear-progress">
+        <div class="lbl" id="gearLbl"></div>
+        <div class="bar-track"><div class="bar-fill" id="gearBar"></div></div>
+      </div>
+      <button class="gear-reset" id="gearReset" type="button">Wyczyść zaznaczenia</button>
+    </div>
+    <div id="gearList"></div>
+    <div class="gear-q" id="gearQ"></div>
+  </section>
+</div>
+
+<script src="plan-data.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  // ---------- ikony (SVG, kreskowe) ----------
+  const P = (d) => `<svg class="ic" viewBox="0 0 24 24"><path d="${d}"/></svg>`;
+  const ICONS = {
+    flight: P("M10.5 13.5 3 11l1.5-1.5 5.5.5 5-5c.7-.7 2-1 2.5-.5s.2 1.8-.5 2.5l-5 5 .5 5.5L11 19l-2.5-7.5zM4 20h7"),
+    train:  P("M7 3h10a2 2 0 0 1 2 2v9a3 3 0 0 1-3 3H8a3 3 0 0 1-3-3V5a2 2 0 0 1 2-2zM5 10h14M9 14h.01M15 14h.01M8 17l-2 4M16 17l2 4"),
+    bus:    P("M5 4h14a1 1 0 0 1 1 1v11a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a1 1 0 0 1 1-1zM4 11h16M8 18v2M16 18v2M8.5 14.5h.01M15.5 14.5h.01"),
+    car:    P("M4 16v-4l2-5a1.5 1.5 0 0 1 1.4-1h9.2a1.5 1.5 0 0 1 1.4 1l2 5v4M4 12h16M4 16h16M7.5 19a1.5 1.5 0 1 0 0-.01M16.5 19a1.5 1.5 0 1 0 0-.01"),
+    boat:   P("M4 15l1.5-5H12V5.5L18.5 10l1.5 5M3 18c1.5 1.2 3 1.2 4.5 0s3-1.2 4.5 0 3 1.2 4.5 0 3-1.2 4.5 0"),
+    hike:   P("M3 20l6-9 4 5 3-4 5 8zM14 7a1.6 1.6 0 1 0 0-.01"),
+    ruins:  P("M4 21h16M5 18h14M7 18V9M12 18V9M17 18V9M4 9h16l-2-4H6z"),
+    sight:  P("M4 8h3l2-2h6l2 2h3v11H4zM12 16.5a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"),
+    meal:   P("M7 3v7a2 2 0 0 0 2 2v9M11 3v7a2 2 0 0 1-2 2M16 3c-1.5 1-2.5 3-2.5 5.5S14.5 12 16 12v9M16 3v18"),
+    rest:   P("M5 11h11v4a5 5 0 0 1-5 5H10a5 5 0 0 1-5-5zM16 12h1.5a2.5 2.5 0 0 1 0 5H16M8 7c0-1 1-1.3 1-2.3M12 7c0-1 1-1.3 1-2.3"),
+    hotel:  P("M3 19V6M3 15h18v4M3 12h18a0 0 0 0 0 0 0v0a3 3 0 0 0-3-3H10v3M6.5 9.5a1.3 1.3 0 1 0 0-.01"),
+    warn:   P("M12 4 2.5 20h19zM12 10v4M12 17.2v.01"),
+    // kategorie ekwipunku
+    bag:    P("M6 8h12l1 12H5zM9 8V6a3 3 0 0 1 6 0v2"),
+    shirt:  P("M8 4 4 7l2 3 1-1v10h10V9l1 1 2-3-4-3-1.5 2h-3z"),
+    shoe:   P("M3 16v-6l4-2 3 3c2 2 5 2.5 8 3l3 1v2a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1zM3 13h18"),
+    bath:   P("M4 12h16v3a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4zM6 12V6a2 2 0 0 1 4 0M5 19l-1 2M19 19l1 2"),
+    cross:  P("M9 3h6v6h6v6h-6v6H9v-6H3V9h6z"),
+    plug:   P("M9 3v5M15 3v5M6 8h12v3a6 6 0 0 1-12 0zM12 17v4"),
+    gear:   P("M12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6zM12 3l1.4 2.3 2.6-.6.5 2.6 2.3 1.4-1.2 2.4 1.2 2.4-2.3 1.4-.5 2.6-2.6-.6L12 21l-1.4-2.3-2.6.6-.5-2.6L5.2 15l1.2-2.4L5.2 8.2l2.3-1.4.5-2.6 2.6.6z"),
+    id:     P("M3 5h18v14H3zM7 9.5a1.6 1.6 0 1 0 0-.01M5 15c.5-1.6 3.5-1.6 4 0M13 9h5M13 12h5M13 15h3"),
+  };
+  const CHEV = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9l7 7 7-7"/></svg>';
+
+  // ---------- motyw ----------
+  const root = document.documentElement;
+  const savedTheme = localStorage.getItem("peru-theme");
+  if (savedTheme) root.dataset.theme = savedTheme;
+  document.getElementById("themeBtn").addEventListener("click", () => {
+    const dark = root.dataset.theme === "dark" ||
+      (!root.dataset.theme && matchMedia("(prefers-color-scheme: dark)").matches);
+    root.dataset.theme = dark ? "light" : "dark";
+    localStorage.setItem("peru-theme", root.dataset.theme);
+    renderStories();
+  });
+  const isDark = () =>
+    root.dataset.theme === "dark" ||
+    (!root.dataset.theme && matchMedia("(prefers-color-scheme: dark)").matches);
+  const regionColor = (key) => TRIP.regions[key][isDark() ? "dark" : "light"];
+
+  // ---------- pomocnicze ----------
+  const fmtLong = (d) =>
+    new Intl.DateTimeFormat("pl-PL", { weekday: "long", day: "numeric", month: "long" })
+      .format(d instanceof Date ? d : new Date(d + "T12:00:00"));
+  const toMin = (t) => { const [h, m] = t.split(":").map(Number); return h * 60 + m; };
+  const fmtDur = (min) => {
+    if (!min) return "";
+    const h = Math.floor(min / 60), m = min % 60;
+    if (!h) return `${m} min`;
+    if (!m) return `${h} h`;
+    return `${h} h ${m} min`;
+  };
+  const altClass = (m) =>
+    m >= 4500 ? "alt-extreme" : m >= 3500 ? "alt-high" : m >= 2500 ? "alt-mid" : "alt-ok";
+
+  // ---------- nagłówek ----------
+  document.title = TRIP.title + " — plan wyprawy";
+  document.getElementById("t-title").textContent = TRIP.title;
+  const subEl = document.getElementById("t-sub");
+  if (TRIP.subtitle) subEl.textContent = TRIP.subtitle; else subEl.remove();
+  if (TRIP.demo) {
+    document.getElementById("demoBadge").innerHTML =
+      '<span class="demo-badge">Wersja demo</span>';
+  }
+  const s = new Date(TRIP.start + "T12:00:00");
+  const e = new Date(TRIP.end + "T12:00:00");
+  const monthYear = new Intl.DateTimeFormat("pl-PL", { month: "long", year: "numeric" }).format(e);
+  const range = s.getMonth() === e.getMonth()
+    ? `${s.getDate()}–${e.getDate()} ${monthYear}`
+    : `${fmtLong(TRIP.start)} – ${fmtLong(TRIP.end)}`;
+  const daysTo = Math.ceil((s - new Date()) / 864e5);
+  document.getElementById("t-meta").innerHTML = `
+    <span class="chip"><strong>${range}</strong></span>
+    <span class="chip"><strong>${TRIP.totalDays} dni</strong> na miejscu</span>
+    ${daysTo > 0 ? `<span class="chip">start za <strong>${daysTo} dni</strong></span>` : ""}`;
+  document.getElementById("t-travelers").innerHTML =
+    TRIP.travelers.map((t) => `<span class="chip">${t}</span>`).join("");
+  document.getElementById("t-updated").textContent =
+    "ostatnia aktualizacja planu: " + TRIP.updated;
+
+  // ---------- nawigacja regionów ----------
+  const present = [...new Set(TRIP.days.map((d) => d.region))];
+  const firstDayOfRegion = {};
+  TRIP.days.forEach((d) => { if (!(d.region in firstDayOfRegion)) firstDayOfRegion[d.region] = d.day; });
+  document.getElementById("regionNav").innerHTML = present
+    .map((r) => `
+      <a class="region-chip" href="#day-${firstDayOfRegion[r]}">
+        <span class="region-dot" data-region="${r}"></span>${TRIP.regions[r].name}
+      </a>`)
+    .join("");
+
+  // ---------- karty dni ----------
+  const PXMIN = 0.72;           // piksele na minutę — 1 h ≈ 43 px
+  const tl = document.getElementById("timeline");
+  let prevRegion = null;
+
+  tl.innerHTML = TRIP.days.map((d) => {
+    prevRegion = d.region;
+    const badges = [
+      `<span class="badge region">${TRIP.regions[d.region].name}</span>`,
+      d.status === "locked" ? `<span class="badge locked">bilety kupione</span>` : "",
+      d.status === "buffer" ? `<span class="badge locked">do decyzji</span>` : "",
+      `<span class="chev">${CHEV}</span>`,
+    ].join("");
+
+    const timed = d.items.filter((it) => it.time);
+    const untimed = d.items.filter((it) => !it.time);
+    const preview = d.items.map((it) => ICONS[it.type] || "").join("");
+
+    let sched = "";
+    if (timed.length >= 2) {
+      const t0 = Math.floor(toMin(timed[0].time) / 60) * 60;
+      const tEnd = Math.max(...timed.map((it) => toMin(it.time) + (it.min || 0)));
+      const tCeil = Math.ceil(tEnd / 60) * 60;
+      const railH = (tCeil - t0) * PXMIN;
+      let inner = `<div class="rail"></div>`;
+      for (let mm = t0; mm <= tCeil; mm += 60) {
+        const y = (mm - t0) * PXMIN;
+        const showLabel = ((mm - t0) / 60) % 2 === 0;
+        inner += `<div class="tick" style="top:${y}px">
+                    <div class="tline"></div>
+                    ${showLabel ? `<div class="tlabel">${String(Math.floor(mm / 60)).padStart(2, "0")}:00</div>` : ""}
+                  </div>`;
+      }
+      timed.forEach((it) => {
+        const y = (toMin(it.time) - t0) * PXMIN;
+        if (it.min) inner += `<div class="bar" style="top:${y}px;height:${Math.max(it.min * PXMIN, 6)}px"></div>`;
+        inner += `<div class="dot" style="top:${y - 3}px"></div>`;
+        inner += `
+          <div class="ev ${it.type === "warn" ? "warn-ev" : ""}" data-y="${y}" style="top:${y - 4}px">
+            <div class="line1">
+              <span class="evi">${ICONS[it.type] || ""}</span>
+              <span class="time">${it.approx ? '<span class="ok">ok.&nbsp;</span>' : ""}${it.time}</span>
+              <span class="txt">${it.text}</span>
+              ${it.min ? `<span class="dur">${fmtDur(it.min)}</span>` : ""}
+            </div>
+          </div>`;
+      });
+      sched = `<div class="sched" data-rail="${railH}" style="height:${railH + 40}px">${inner}</div>`;
+    }
+
+    const restList = untimed.length
+      ? `<div class="rest-list">${untimed.map((it) => `
+          <div class="rest-item">
+            <span class="evi">${ICONS[it.type] || ""}</span>
+            <div class="txt">${it.text}</div>
+          </div>`).join("")}</div>`
+      : "";
+
+    return `
+      <section class="day" id="day-${d.day}" data-region="${d.region}" role="button" aria-expanded="false" tabindex="0">
+        <div class="day-head">
+          <span class="day-num">Dzień ${d.day}</span>
+          <span class="day-date">${fmtLong(d.date)}</span>
+          <span class="badges">${badges}</span>
+        </div>
+        <div class="day-title">${d.title}</div>
+        <div class="preview">${preview}</div>
+        <div class="collapse"><div class="inner">${sched}${restList}</div></div>
+        <div class="night">
+          <span class="evi">${ICONS.hotel}</span> nocleg: <b>${d.night.place}</b>
+          <span class="alt-chip ${altClass(d.night.altitude)}">▲ ${d.night.altitude.toLocaleString("pl-PL")} m</span>
+        </div>
+      </section>`;
+  }).join("");
+
+  if (TRIP.demo) {
+    tl.insertAdjacentHTML("beforeend", `<div class="ghost">${TRIP.demoNote}</div>`);
+  }
+  document.getElementById("foot").textContent =
+    `${TRIP.title} · dni w widoku: ${TRIP.days.length} z ${TRIP.totalDays}`;
+
+  // korekta nakładania się opisów (kropki zostają w proporcji, tekst się rozsuwa)
+  function layoutScheds() {
+    document.querySelectorAll(".sched").forEach((sc) => {
+      let prevBottom = -1e9;
+      let maxBottom = parseFloat(sc.dataset.rail);
+      sc.querySelectorAll(".ev").forEach((ev) => {
+        const yProp = parseFloat(ev.dataset.y) - 4;
+        const y = Math.max(yProp, prevBottom + 8);
+        ev.style.top = y + "px";
+        prevBottom = y + ev.offsetHeight;
+        maxBottom = Math.max(maxBottom, prevBottom);
+      });
+      sc.style.height = (maxBottom + 10) + "px";
+    });
+  }
+
+  // klik / Enter = rozwiń albo zwiń
+  document.querySelectorAll(".day").forEach((card) => {
+    const toggle = () => {
+      card.classList.toggle("open");
+      card.setAttribute("aria-expanded", card.classList.contains("open"));
+    };
+    card.addEventListener("click", toggle);
+    card.addEventListener("keydown", (ev) => {
+      if (ev.key === "Enter" || ev.key === " ") { ev.preventDefault(); toggle(); }
+    });
+  });
+
+  // animacja wejścia przy przewijaniu
+  const revealables = document.querySelectorAll(".day, .ghost");
+  if (reduceMotion || !("IntersectionObserver" in window)) {
+    revealables.forEach((el) => el.classList.add("in"));
+  } else {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((en) => {
+        if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); }
+      });
+    }, { threshold: 0.08, rootMargin: "0px 0px -30px 0px" });
+    revealables.forEach((el) => io.observe(el));
+  }
+
+  function paintRegions() {
+    document.querySelectorAll(".day").forEach((el) => {
+      el.style.setProperty("--rc", regionColor(el.dataset.region));
+    });
+    document.querySelectorAll(".region-dot").forEach((el) => {
+      el.style.background = regionColor(el.dataset.region);
+    });
+  }
+
+  // ---------- kafelki „Stories" (cała podróż, dzień po dniu) ----------
+  const stories = document.getElementById("stories");
+  const byDay = new Map(TRIP.days.map((d) => [d.day, d]));
+  const dateOf = (n) => {
+    const dt = new Date(TRIP.start + "T12:00:00");
+    dt.setDate(dt.getDate() + n - 1);
+    return dt;
+  };
+  const fmtShortDate = (dt) =>
+    new Intl.DateTimeFormat("pl-PL", { day: "numeric", month: "short" }).format(dt);
+
+  // reprezentacyjna ikona dnia — najważniejszy typ zajęcia
+  const HERO_ORDER = ["ruins", "hike", "boat", "sight", "train", "flight", "bus", "meal", "car", "rest", "warn"];
+  const heroIcon = (d) => {
+    for (const t of HERO_ORDER) if (d.items.some((it) => it.type === t)) return ICONS[t] || "";
+    return ICONS.sight;
+  };
+
+  // przewiń do dnia w planie i rozwiń jego kartę
+  function jumpToDay(n) {
+    const target = document.getElementById("day-" + n);
+    if (!target) return;
+    if (!target.classList.contains("open")) {
+      target.classList.add("open");
+      target.setAttribute("aria-expanded", "true");
+    }
+    target.classList.add("in");
+    target.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
+  }
+
+  const photoOf = (d) => d.photo || (TRIP.regions[d.region] && TRIP.regions[d.region].photo) || "";
+
+  // małe kółko-awatar: ikona głównego zajęcia dnia w kolorze regionu
+  function makeAvatar(iconSvg) {
+    const a = document.createElement("div");
+    a.className = "avatar";
+    a.innerHTML = (iconSvg || "").replace('class="ic"', "");
+    return a;
+  }
+
+  function renderStories() {
+    paintRegions();
+    const cards = [];
+    for (let n = 1; n <= TRIP.totalDays; n++) {
+      const d = byDay.get(n);
+      const card = document.createElement("button");
+      card.type = "button";
+      const dt = dateOf(n);
+
+      const thumb = document.createElement("div");
+      thumb.className = "thumb";
+      const name = document.createElement("div");
+      name.className = "name";
+
+      if (d) {
+        const c = regionColor(d.region);
+        const c2 = `color-mix(in srgb, ${c} 100%, black 26%)`;
+        card.className = "story planned";
+        card.style.setProperty("--ring", c);
+        card.setAttribute("aria-label",
+          `Dzień ${n}, ${TRIP.regions[d.region].name}: ${d.short || d.title} — przejdź do planu`);
+
+        const photo = photoOf(d);
+        // gradient jako tło zapasowe pod zdjęciem (gdyby plik nie wczytał się)
+        thumb.style.background = `linear-gradient(155deg, ${c} 0%, ${c2} 100%)`;
+        if (photo) {
+          const url = `url("${encodeURI(photo)}")`;
+          thumb.style.backgroundImage = url;
+          thumb.style.backgroundSize = "cover";
+          thumb.style.backgroundPosition = "center";
+        }
+
+        thumb.appendChild(makeAvatar(heroIcon(d)));
+        const scrim = document.createElement("div");
+        scrim.className = "scrim";
+        thumb.appendChild(scrim);
+
+        const dn = document.createElement("div");
+        dn.className = "dn";
+        dn.textContent = `Dzień ${n}`;
+        const tt = document.createElement("div");
+        tt.className = "tt";
+        tt.textContent = d.short || d.title;
+        name.append(dn, tt);
+        thumb.appendChild(name);
+
+        card.appendChild(thumb);
+        card.addEventListener("click", () => jumpToDay(n));
+      } else {
+        card.className = "story ghost";
+        card.disabled = true;
+        card.setAttribute("aria-label", `Dzień ${n} — jeszcze do ułożenia`);
+        thumb.appendChild(makeAvatar(ICONS.sight));
+        const tt = document.createElement("div");
+        tt.className = "tt";
+        tt.textContent = `Dzień ${n}`;
+        const dn = document.createElement("div");
+        dn.className = "dn";
+        dn.textContent = "do ułożenia";
+        name.append(tt, dn);
+        thumb.appendChild(name);
+        card.appendChild(thumb);
+      }
+      cards.push(card);
+    }
+    stories.replaceChildren(...cards);
+    updateNextBtn();
+
+    if (!reduceMotion) {
+      stories.querySelectorAll(".story").forEach((el, i) => {
+        el.style.opacity = "0";
+        el.style.transform = "translateY(8px)";
+        el.style.transition = `opacity .4s ease ${i * 20}ms, transform .4s ease ${i * 20}ms`;
+        requestAnimationFrame(() => requestAnimationFrame(() => {
+          el.style.opacity = ""; el.style.transform = "";
+        }));
+      });
+    }
+  }
+
+  // strzałki — przewijają pasek o ~2 kafelki
+  const prevBtn = document.getElementById("storiesPrev");
+  const nextBtn = document.getElementById("storiesNext");
+  prevBtn.innerHTML = CHEV.replace('viewBox="0 0 24 24"', 'viewBox="0 0 24 24" style="transform:rotate(90deg)"');
+  nextBtn.innerHTML = CHEV.replace('viewBox="0 0 24 24"', 'viewBox="0 0 24 24" style="transform:rotate(-90deg)"');
+  const STEP = 236;
+  function updateNextBtn() {
+    const max = stories.scrollWidth - stories.clientWidth;
+    nextBtn.classList.toggle("on", stories.scrollLeft < max - 8);
+    prevBtn.classList.toggle("on", stories.scrollLeft > 8);
+  }
+  const scrollBy = (dx) =>
+    stories.scrollBy({ left: dx, behavior: reduceMotion ? "auto" : "smooth" });
+  prevBtn.addEventListener("click", () => scrollBy(-STEP));
+  nextBtn.addEventListener("click", () => scrollBy(STEP));
+  stories.addEventListener("scroll", updateNextBtn, { passive: true });
+
+  // chwyt myszą i przeciąganie (dotyk zostawiamy natywnemu scrollowi)
+  let dragDown = false, dragStartX = 0, dragStartLeft = 0, dragged = false;
+  stories.addEventListener("pointerdown", (e) => {
+    if (e.pointerType !== "mouse" || e.button !== 0) return;
+    dragDown = true; dragged = false;
+    dragStartX = e.clientX; dragStartLeft = stories.scrollLeft;
+    stories.classList.add("dragging");
+  });
+  addEventListener("pointermove", (e) => {
+    if (!dragDown) return;
+    const dx = e.clientX - dragStartX;
+    if (Math.abs(dx) > 4) dragged = true;
+    stories.scrollLeft = dragStartLeft - dx;
+  });
+  const endDrag = () => {
+    if (!dragDown) return;
+    dragDown = false;
+    stories.classList.remove("dragging");
+  };
+  addEventListener("pointerup", endDrag);
+  addEventListener("pointercancel", endDrag);
+  // po przeciągnięciu — nie odpalaj kliknięcia kafelka
+  stories.addEventListener("click", (e) => {
+    if (dragged) { e.stopPropagation(); e.preventDefault(); dragged = false; }
+  }, true);
+
+  renderStories();
+  layoutScheds();
+  addEventListener("resize", () => { layoutScheds(); updateNextBtn(); });
+
+  // ---------- zakładki PLAN / EKWIPUNEK ----------
+  const tabs = document.getElementById("tabs");
+  const views = {
+    plan: document.getElementById("view-plan"),
+    ekwipunek: document.getElementById("view-ekwipunek"),
+  };
+  const tabBtns = tabs.querySelectorAll(".tab");
+  tabBtns[0].innerHTML = `${ICONS.sight}<span>Plan</span>`;
+  tabBtns[1].innerHTML = `${ICONS.bag}<span>Ekwipunek</span><span class="cnt" id="tabCnt"></span>`;
+
+  function switchView(name) {
+    tabBtns.forEach((b) => b.classList.toggle("active", b.dataset.view === name));
+    Object.entries(views).forEach(([k, el]) => { el.hidden = k !== name; });
+    localStorage.setItem("peru-tab", name);
+    if (name === "plan") { layoutScheds(); updateNextBtn(); }
+    scrollTo({ top: 0, behavior: reduceMotion ? "auto" : "smooth" });
+  }
+  tabBtns.forEach((b) => b.addEventListener("click", () => switchView(b.dataset.view)));
+
+  // ---------- ekwipunek ----------
+  const GEAR_KEY = "peru-gear-v1";
+  const gearState = JSON.parse(localStorage.getItem(GEAR_KEY) || "{}");
+  const idOf = (ci, ii) => `${ci}-${ii}`;
+  const totalItems = GEAR.categories.reduce((s, c) => s + c.items.length, 0);
+  const gearList = document.getElementById("gearList");
+  const gearBar = document.getElementById("gearBar");
+  const gearLbl = document.getElementById("gearLbl");
+
+  document.getElementById("gearIntro").textContent = GEAR.intro;
+  document.getElementById("gearQ").innerHTML =
+    `<b>Do ustalenia</b>${GEAR.openQuestion}`;
+
+  const esc = (s) => s.replace(/[&<>"]/g, (c) =>
+    ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+  function noteHtml(it) {
+    if (it.url) {
+      const label = it.note ? esc(it.note) : "link";
+      return `<span class="gnote"><a href="${esc(it.url)}" target="_blank" rel="noopener">${label} ↗</a></span>`;
+    }
+    return it.note ? `<span class="gnote">${esc(it.note)}</span>` : "";
+  }
+
+  gearList.innerHTML = GEAR.categories.map((cat, ci) => {
+    const items = cat.items.map((it, ii) => {
+      const id = idOf(ci, ii);
+      const on = !!gearState[id];
+      return `
+        <li class="gitem ${on ? "checked" : ""}" data-id="${id}">
+          <input type="checkbox" ${on ? "checked" : ""} aria-label="${esc(it.t)}">
+          <span class="gtxt">${esc(it.t)}${it.qty ? `<span class="qty">${esc(it.qty)}</span>` : ""}${it.sug ? '<span class="sug-tag">propozycja</span>' : ""}${noteHtml(it)}</span>
+        </li>`;
+    }).join("");
+    return `
+      <div class="gcat open" data-ci="${ci}">
+        <div class="gcat-head" role="button" tabindex="0" aria-expanded="true">
+          <span class="gci">${ICONS[cat.icon] || ICONS.bag}</span>
+          <h3>${esc(cat.name)}</h3>
+          <span class="gcount" data-ci="${ci}"></span>
+          <span class="chev">${CHEV}</span>
+        </div>
+        ${cat.note ? `<div class="gcat-note">${esc(cat.note)}</div>` : ""}
+        <div class="gcat-body"><div class="gci-inner"><ul class="glist">${items}</ul></div></div>
+      </div>`;
+  }).join("");
+
+  function updateGearCounts() {
+    let done = 0;
+    GEAR.categories.forEach((cat, ci) => {
+      let cd = 0;
+      cat.items.forEach((_, ii) => { if (gearState[idOf(ci, ii)]) cd++; });
+      done += cd;
+      const el = gearList.querySelector(`.gcount[data-ci="${ci}"]`);
+      el.textContent = `${cd}/${cat.items.length}`;
+      el.classList.toggle("done", cd === cat.items.length);
+    });
+    const pct = totalItems ? Math.round((done / totalItems) * 100) : 0;
+    gearBar.style.width = pct + "%";
+    gearLbl.innerHTML = `Spakowane: <b>${done}</b> z ${totalItems} · ${pct}%`;
+    const tabCnt = document.getElementById("tabCnt");
+    if (tabCnt) tabCnt.textContent = `${done}/${totalItems}`;
+  }
+  updateGearCounts();
+
+  gearList.addEventListener("change", (e) => {
+    const box = e.target.closest("input[type=checkbox]");
+    if (!box) return;
+    const li = box.closest(".gitem");
+    const id = li.dataset.id;
+    if (box.checked) gearState[id] = 1; else delete gearState[id];
+    li.classList.toggle("checked", box.checked);
+    localStorage.setItem(GEAR_KEY, JSON.stringify(gearState));
+    updateGearCounts();
+  });
+
+  // zwijanie kategorii (klik w nagłówek, ale nie w checkbox)
+  gearList.querySelectorAll(".gcat-head").forEach((head) => {
+    const cat = head.closest(".gcat");
+    const toggle = () => {
+      cat.classList.toggle("open");
+      head.setAttribute("aria-expanded", cat.classList.contains("open"));
+    };
+    head.addEventListener("click", toggle);
+    head.addEventListener("keydown", (ev) => {
+      if (ev.key === "Enter" || ev.key === " ") { ev.preventDefault(); toggle(); }
+    });
+  });
+
+  document.getElementById("gearReset").addEventListener("click", () => {
+    if (!confirm("Odznaczyć wszystkie pozycje ekwipunku?")) return;
+    for (const k in gearState) delete gearState[k];
+    localStorage.removeItem(GEAR_KEY);
+    gearList.querySelectorAll("input[type=checkbox]").forEach((b) => { b.checked = false; });
+    gearList.querySelectorAll(".gitem").forEach((li) => li.classList.remove("checked"));
+    updateGearCounts();
+  });
+
+  // przywróć ostatnią zakładkę
+  switchView(localStorage.getItem("peru-tab") === "ekwipunek" ? "ekwipunek" : "plan");
+})();
+</script>
+</body>
+</html>
