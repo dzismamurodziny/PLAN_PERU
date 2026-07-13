@@ -18,7 +18,7 @@
 // ============================================================
 
 const TRIP = {
-  updated: "2026-07-07",
+  updated: "2026-07-13",
   demo: true,
   demoNote: "Wersja demonstracyjna — pierwsze cztery dni. Dalszy ciąg trasy (Święta Dolina, Cusco, Titicaca, Huaraz, Amazonia) dojdzie po ułożeniu kolejności.",
   title: "Peru 2026",
@@ -50,7 +50,6 @@ const TRIP = {
         { time: "09:55", min: 750, type: "flight", text: "KL0743 Amsterdam → Lima", note: "Boeing 777-300ER; na przesiadkę w Amsterdamie 2 h 10 min" },
         { time: "15:25", type: "flight", text: "Lądowanie w Limie", note: "odprawa, bagaże, karta SIM i wymiana gotówki na lotnisku" },
         { time: "16:30", approx: true, min: 45, type: "car", text: "Przejazd do hotelu w Miraflores", note: "autoryzowana taxi albo Uber — pomijamy naganiaczy w hali przylotów" },
-        { time: "19:30", approx: true, min: 90, type: "meal", text: "Kolacja: pierwsze peruwiańskie ceviche", note: "lekki wieczór — za nami dziewiętnaście godzin podróży, jutro pełny dzień" },
       ],
     },
     {
@@ -189,6 +188,7 @@ const GEAR = {
         { t: "Słuchawki", note: "najlepiej z aktywną redukcją szumów (ANC) — ratują na 19 h lotu i w nocnych autobusach" },
         { t: "Kabel USB zapasowy", sug: true, note: "kable padają najczęściej — zapasowy waży grosze" },
         { t: "Ładowarka jako rozgałęziacz / 2. port", sug: true, note: "4 osoby, mało gniazdek w hostelach" },
+        { t: "Zapasowy telefon (każdy)", sug: true, note: "zalogowane banki, mObywatel, Google, WhatsApp itp. — ratunek gdy główny padnie/zginie/ukradną. Kacper pomoże skonfigurować" },
       ],
     },
     {
@@ -200,9 +200,8 @@ const GEAR = {
         { t: "Butelka 1 l wielokrotnego użytku", note: "Majestic Sport Tritan BPA-free — niezniszczalna", url: "https://allegro.pl/oferta/butelka-na-wode-duza-sportowa-bidon-tritan-bpa-free-majestic-sport-1l-15251722808" },
         { t: "Opaska na oczy do spania" },
         { t: "Saszetka biodrowa „nerka”" },
-        { t: "Organizery / packing cubes", sug: true, note: "kluczowe przy podręcznym — porządek i kompresja objętości" },
+        { t: "Organizery / packing cubes", sug: true, note: "kluczowe przy podręcznym — porządek i kompresja objętości. Kacper zamówi z Temu; Naturehike dobre" },
         { t: "Worek wodoszczelny (dry bag)", sug: true, note: "łódź w Amazonii, deszcz, mokre rzeczy" },
-        { t: "Kłódka TSA + linka", sug: true, note: "plecak w hostelu / bagażowni" },
         { t: "Zatyczki do uszu", sug: true, note: "nocne autobusy, hostele, koguty o świcie" },
       ],
     },
