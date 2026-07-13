@@ -94,12 +94,7 @@
   .chip strong { color: var(--ink); font-weight: 600; }
   .chip.person {
     display: inline-flex; align-items: center; gap: 7px;
-    padding: 3px 12px 3px 4px; font-weight: 500;
-  }
-  .chip.person img {
-    width: 27px; height: 27px; border-radius: 50%; object-fit: cover;
-    border: 2px solid #fff; box-shadow: 0 1px 4px rgba(0,0,0,.28);
-    background: var(--chip-bg);
+    padding: 3px 12px; font-weight: 500;
   }
   .updated { margin-top: 10px; font-size: 12px; color: var(--muted); }
 
@@ -586,12 +581,8 @@
     <span class="chip"><strong>${range}</strong></span>
     <span class="chip"><strong>${TRIP.totalDays} dni</strong> na miejscu</span>
     ${daysTo > 0 ? `<span class="chip">start za <strong>${daysTo} dni</strong></span>` : ""}`;
-  const AVATARS = { "Kacper": "kacper", "Klaudiusz": "klaudiusz", "Małgorzata": "malgorzata", "Ireneusz": "ireneusz" };
   document.getElementById("t-travelers").innerHTML =
-    TRIP.travelers.map((t) => {
-      const a = AVATARS[t];
-      return `<span class="chip person">${a ? `<img src="img/faces/${a}.png" alt="${t}" loading="lazy">` : ""}${t}</span>`;
-    }).join("");
+    TRIP.travelers.map((t) => `<span class="chip person">${t}</span>`).join("");
   document.getElementById("t-updated").textContent =
     "ostatnia aktualizacja planu: " + TRIP.updated;
 
